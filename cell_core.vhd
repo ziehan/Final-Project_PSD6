@@ -4,10 +4,12 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity cell_core is
     Port (
-        clk           : in  STD_LOGIC;
-        reset         : in  STD_LOGIC;
-        neighbors     : in  STD_LOGIC_VECTOR(7 downto 0); -- Status 8 tetangga
-        current_state : out STD_LOGIC                     -- Output status sel ini
+        clk : in STD_LOGIC;
+        reset : in STD_LOGIC;
+        we : in STD_LOGIC; -- write enable
+        data_in : in STD_LOGIC; -- nilai yang mau ditulis (1/0)
+        neighbors : in STD_LOGIC_VECTOR(7 downto 0); -- Status 8 tetangga
+        current_state : out STD_LOGIC -- Output status sel ini
     );
 end cell_core;
 
@@ -43,20 +45,24 @@ begin
             state_reg <= '0'; -- Reset sel menjadi mati
         
         elsif rising_edge(clk) then
-            -- 1. Hitung jumlah tetangga yang hidup (Modul 2: Operasi Aritmetika)
-            -- Set ulang penghitung setiap siklus
-            live_neighbors := 0;
-            
-            -- Loop manual untuk menghitung bit '1' pada vector neighbors
-            for i in 0 to 7 loop
-                if neighbors(i) = '1' then
-                    live_neighbors := live_neighbors + 1;
-                end if;
-            end loop;
+            -- [MODUL 8/9 LOGIC] Priority: CPU Write > Game Rules
+            if we = '1' then
+                state_reg <= data_in;
+            else 
+                -- 1. Hitung jumlah tetangga yang hidup (Modul 2: Operasi Aritmetika)
+                -- Set ulang penghitung setiap siklus
+                live_neighbors := 0;
+                
+                -- Loop manual untuk menghitung bit '1' pada vector neighbors
+                for i in 0 to 7 loop
+                    if neighbors(i) = '1' then
+                        live_neighbors := live_neighbors + 1;
+                    end if;
+                end loop;
 
-            -- 2. Tentukan status sel berikutnya menggunakan Function (Modul 7)
-            state_reg <= get_next_state(live_neighbors, state_reg);
-        
+                -- 2. Tentukan status sel berikutnya menggunakan Function (Modul 7)
+                state_reg <= get_next_state(live_neighbors, state_reg);
+            end if;
         end if;
     end process;
 
