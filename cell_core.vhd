@@ -9,6 +9,7 @@ entity cell_core is
         we : in STD_LOGIC; -- write enable
         data_in : in STD_LOGIC; -- nilai yang mau ditulis (1/0)
         neighbors : in STD_LOGIC_VECTOR(7 downto 0); -- Status 8 tetangga
+        enable_sim : in STD_LOGIC; -- INPUT BARU: Sinyal Enable dari Controller
         current_state : out STD_LOGIC -- Output status sel ini
     );
 end cell_core;
@@ -48,8 +49,8 @@ begin
             -- [MODUL 8/9 LOGIC] Priority: CPU Write > Game Rules
             if we = '1' then
                 state_reg <= data_in;
-            else 
-                -- 1. Hitung jumlah tetangga yang hidup (Modul 2: Operasi Aritmetika)
+            elsif enable_sim = '1' then
+                -- Hitung jumlah tetangga yang hidup (Modul 2: Operasi Aritmetika)
                 -- Set ulang penghitung setiap siklus
                 live_neighbors := 0;
                 
@@ -59,9 +60,12 @@ begin
                         live_neighbors := live_neighbors + 1;
                     end if;
                 end loop;
-
-                -- 2. Tentukan status sel berikutnya menggunakan Function (Modul 7)
+                
+                -- Menentukan status sel berikutnya menggunakan Function (Modul 7)
                 state_reg <= get_next_state(live_neighbors, state_reg);
+            else
+                -- Jika enable_sim = 0 dan we = 0, tahan nilai lama (Memory)
+                state_reg <= state_reg;
             end if;
         end if;
     end process;

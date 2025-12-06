@@ -24,29 +24,30 @@ begin
 
     UUT: top_system port map (clk => clk, reset => reset, grid_out => grid);
 
-    --clock 
+    -- clock 
     process
     begin
-        clk <= '0'; wait for CLK_PERIOD/2;
+        clk <= '0';
+        wait for CLK_PERIOD/2;
         clk <= '1'; wait for CLK_PERIOD/2;
     end process;
 
-    --Main Simulation
+    -- Main Simulation
     process
         variable line_buf : line;
         variable i : integer;
     begin
-        --Reset 
+        -- Reset 
         reset <= '1';
         wait for CLK_PERIOD * 2;
         reset <= '0';
         
-        -- 2. Tunggu CPU Menggambar Pola (Sekitar 6-7 clock cycle untuk Glider)
+        -- CPU Menggambar Pola (Sekitar 6-7 clock cycle untuk Glider)
         wait for CLK_PERIOD * 10;
         
         report "CPU Selesai Menggambar. Memulai Simulasi Game of Life...";
 
-        -- 3.Capture Frame selama 30 Clock Cycle (Generasi)
+        -- Capture Frame selama 30 Clock Cycle (Generasi)
         for gen in 1 to 30 loop
             wait until rising_edge(clk);
             
@@ -54,11 +55,11 @@ begin
             write(line_buf, gen);
             writeline(file_out, line_buf);
 
-            --print grid 8x8 untuk bentuk kotak
-            --grid indeks: (Baris * 8) + Kolom
+            -- print grid 8x8 untuk bentuk kotak
+            -- grid indeks: (Baris * 8) + Kolom
             for r in 0 to 7 loop
-                --8 bit per baris 
-                write(line_buf, grid((r*8)+7 downto (r*8))); 
+                -- 8 bit per baris 
+                write(line_buf, grid((r*8)+7 downto (r*8)));
                 writeline(file_out, line_buf);
             end loop;
             

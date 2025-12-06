@@ -62,26 +62,28 @@ begin
                 when WRITE_STATE =>
                     -- Fetch Instruksi
                     instruction := PATTERN_ROM(pc);
-                    is_last     := instruction(0); -- Bit terakhir penanda selesai
+                    is_last     := instruction(0); 
                     
                     -- Decode ke Output Grid
                     grid_row  <= to_integer(unsigned(instruction(7 downto 5)));
                     grid_col  <= to_integer(unsigned(instruction(4 downto 2)));
                     grid_data <= instruction(1);
-                    grid_we   <= '1'; -- Aktifkan tulis
+                    
+                    grid_we   <= '1'; -- PASTI TULIS!
 
                     -- Next State Logic
                     if is_last = '1' then
-                        state <= RUN_STATE; -- Selesai gambar, jalankan game
-                        grid_we <= '0'; -- Matikan mode tulis segera (di next cycle efektifnya)
+                        state <= RUN_STATE; 
+                        -- HAPUS BARIS INI: grid_we <= '0'; 
+                        -- Biarkan grid_we tetap '1' di cycle ini agar data terakhir masuk!
+                        -- Saat pindah ke RUN_STATE, di clock berikutnya baru grid_we jadi 0 (karena logika di state RUN).
                     else
-                        pc <= pc + 1; -- Lanjut instruksi berikutnya
+                        pc <= pc + 1;
                     end if;
 
                 when RUN_STATE =>
-                    -- Mode Simulasi: CPU diam, Grid jalan sendiri
-                    grid_we <= '0';
-                    sim_running <= '1';
+                    grid_we <= '0';     -- Matikan WE di sini saja
+                    sim_running <= '1'; -- Aktifkan simulasi
                     -- CPU Idle forever
             end case;
         end if;

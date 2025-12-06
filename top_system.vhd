@@ -29,20 +29,21 @@ architecture Structural of top_system is
             cpu_we     : in STD_LOGIC;
             cpu_row, cpu_col : in integer range 0 to 7;
             cpu_data   : in STD_LOGIC;
+            run_sim    : in STD_LOGIC; -- Update component
             grid_out   : out STD_LOGIC_VECTOR(63 downto 0)
         );
     end component;
 
-    --internal signals
-    signal w_we   : std_logic;
-    signal w_row  : integer range 0 to 7;
-    signal w_col  : integer range 0 to 7;
-    signal w_data : std_logic;
-    signal w_run  : std_logic;
+    --internal signals (Diberi nilai awal agar tidak 'U')
+    signal w_we   : std_logic := '0';
+    signal w_row  : integer range 0 to 7 := 0;
+    signal w_col  : integer range 0 to 7 := 0;
+    signal w_data : std_logic := '0';
+    signal w_run  : std_logic := '0';
 
 begin
 
-    -- 1. CPU Controller
+    -- CPU Controller
     CPU_Inst: game_controller port map (
         clk => clk,
         reset => reset,
@@ -53,7 +54,7 @@ begin
         sim_running => w_run
     );
 
-    -- 2.Grid 8x8
+    -- Grid 8x8
     Grid_Inst: game_grid_8x8 port map (
         clk => clk,
         reset => reset,
@@ -61,6 +62,7 @@ begin
         cpu_row => w_row,
         cpu_col => w_col,
         cpu_data => w_data,
+        run_sim => w_run, -- Sambungkan sinyal run
         grid_out => grid_out
     );
 
