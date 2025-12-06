@@ -10,12 +10,12 @@ Sistem ini juga dilengkapi dengan **CPU Mini (Microprogrammed Controller)** yang
 
 ## Anggota Kelompok 6
 
-| Nama                         | NPM        | Peran Utama              |
-| ---------------------------- | ---------- | ------------------------ |
-| Djukallita Tafiana Djoewarsa | 2406416573 | Architecture & Wiring    |
-| Muhamad Rifqi Fadil Itsnain  | 2406355306 | Logic & Arithmetic       |
-| Naziehan Labieb              | 2406487102 | Controller & Microcode   |
-| Soraya Azzizah Pahlevi       | 2406487001 | Verification & Testbench |
+| Nama                         | NPM        |
+| ---------------------------- | ---------- |
+| Djukallita Tafiana Djoewarsa | 2406416573 |
+| Muhamad Rifqi Fadil Itsnain  | 2406355306 |
+| Naziehan Labieb              | 2406487102 |
+| Soraya Azzizah Pahlevi       | 2406487001 |
 
 ---
 
