@@ -90,3 +90,7 @@ FRAME: 3
 =================
 ...
 ```
+
+Berikut adalah schematic dari The Game of Life Physics Engine:
+
+![Screenshot 2025-12-06 215648](https://hackmd.io/_uploads/S1XyC7QMbg.png)
